@@ -13,13 +13,14 @@ async function searchMovies(query) {
   
         // Clear previous results
         let resultListCurr = []
-        resultListCurr = data.description
+        resultListCurr =results
        // resultListCurr.push({title, year, actors, poster, imdbUrl});
 
        if(!storeResults){
         // resultList.push({title, year, actors, poster, imdbUrl});
-       resultList= data.description}
-        displayResults(resultListCurr)
+        resultList= results
+      }
+      displayResults(resultListCurr);
      } else {
         console.log("Error:", data.error_code);
       }
@@ -33,7 +34,7 @@ async function searchMovies(query) {
     const query = event.target.value;
   
     // Minimum query length for searching
-    if (query.length >= 3) {
+    if (query.length >= 2) {
       searchMovies(query);
     } else {
       // Clear results if query is too short
@@ -43,34 +44,41 @@ async function searchMovies(query) {
 
 });
   document.getElementById("storeButton").addEventListener("click", () => {  
-    storeResult = true; 
+    storeResults = true; 
 });
 //Event listener to clear results of movies in a list
 
 document.getElementById("clearButton").addEventListener("click", () => {  
-    storeResult = false; 
+    storeResults = false; 
 });
 document.getElementById("displayResult").addEventListener("click", () => {  
-    displayResult(resultList);
+  //const processedResults = preprocessResults(resultListPara);
+  displayResults(resultList);
 });
 
 // Function to display the results
 function displayResults(resultListPara) {  
-   // Clear previous results  
+  // Clear previous results  
 
-    document.getElementById("results").innerHTML = "";   
+   document.getElementById("results").innerHTML = "";   
 
 // Display each result  
 
-    resultListPara.forEach(result => {    
-        const { title, year, actors, poster, imdbUrl } = result;     
-        const resultElement = document.createElement("div");    
-        resultElement.innerHTML = `      
-        <h2>${title} (${year})</h2>      
-        <p>Actors: ${actors}</p>      
-        <a href="${imdbUrl}" target="_blank">        
-        <img src="${poster}" alt="${title} Poster" width="200" height="300">      
-        </a>    `;     
-        document.getElementById("results").appendChild(resultElement);  
-        }); 
+   resultListPara.forEach(result => {    
+       const title = result["#TITLE"];
+       const year = result["#YEAR"];
+       const actors = result["#ACTORS"];
+       const poster = result["#IMG_POSTER"];
+       const imdbUrl = result["#IMDB_URL"];
+      
+       const resultElement = document.createElement("div");    
+       resultElement.innerHTML = `      
+       <div style="text-align:center">
+       <h2>${title} (${year})</h2>      
+       <p>Actors: ${actors}</p>      
+       <a href="${imdbUrl}" target="_blank">        
+       <img src="${poster}" alt="${title} Poster" width="200" height="300">      
+       </a> <br/><br/><br/></div>   `;     
+       document.getElementById("results").appendChild(resultElement);  
+       }); 
 }
